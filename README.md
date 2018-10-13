@@ -24,7 +24,7 @@ If you want to automatically start ComicDB when starting your computer, you can 
 
 ## Comics Organization
 To get familiar with the way ComicDB expects you to organize your comics, please take a look at the included testing 
-data.  and the Comicvine wiki.
+data and the Comicvine wiki.
 
 # Testing Data
 For testing purposes, ComicDB includes empty dummy files that will match to some comics.
@@ -32,6 +32,21 @@ You can use these to test if your connection to the API works as intended.
 To prevent these dummies from showing up in your real library after testing, you should delete them 
 from the comics directory and use the `Delete Database` button from the main menu to get a clean database for 
 your production data. 
+
+# Screenshots
+
+<table>
+<tr>
+<td>
+<img src="https://blog.ahahn94.de/wp-content/uploads/2018/10/comicdb_first_start.png"></td>
+</tr>
+<tr>
+<td><img src="https://blog.ahahn94.de/wp-content/uploads/2018/10/comicdb_library.png"></td>
+</tr>
+<tr>
+<td><img src="https://blog.ahahn94.de/wp-content/uploads/2018/10/comicdb_volume.png"></td>
+</tr>
+</table>
 
 # Additional Information
 
