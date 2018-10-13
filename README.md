@@ -1,7 +1,5 @@
 # ComicDB
-ComicDB is a self-hosted personal comics library. It is brower-based, you can view and download your comics
-collection on your PC, smartphone or tablet. It can handle about any digital comic book format as it only links to your 
-comic files.
+#### ComicDB is a self-hosted personal comics library. It is brower-based, you can view and download your comics collection on your PC, smartphone or tablet. It can handle about any digital comic book format as it only links to your comic files.
 
 #### ComicDB can not open any comic books. To read your comics, you will need a comic reader on your local device. 
 
@@ -15,7 +13,7 @@ comic files.
 - get an API key for the Comicvine API from [https://comicvine.gamespot.com/api/](https://comicvine.gamespot.com/api/) and put it into `api-key.ini`
 
 ## Server Control
-- start the server by running 'ComicDB.sh' or 'ComicDB.sh start'
+- start the server by running `ComicDB.sh` or `ComicDB.sh start`
 - to stop the server just run `ComicDB.sh stop`
 - to stop the server and delete the docker containers, run `ComicDB.sh delete`. This will delete your database!
 
@@ -24,7 +22,7 @@ If you want to automatically start ComicDB when starting your computer, you can 
 
 ## Comics Organization
 To get familiar with the way ComicDB expects you to organize your comics, please take a look at the included testing 
-data.  and the Comicvine wiki.
+data and the Comicvine wiki.
 
 # Testing Data
 For testing purposes, ComicDB includes empty dummy files that will match to some comics.
@@ -32,6 +30,21 @@ You can use these to test if your connection to the API works as intended.
 To prevent these dummies from showing up in your real library after testing, you should delete them 
 from the comics directory and use the `Delete Database` button from the main menu to get a clean database for 
 your production data. 
+
+# Screenshots
+
+<table>
+<tr>
+<td>
+<img src="https://blog.ahahn94.de/wp-content/uploads/2018/10/comicdb_first_start.png"></td>
+</tr>
+<tr>
+<td><img src="https://blog.ahahn94.de/wp-content/uploads/2018/10/comicdb_library.png"></td>
+</tr>
+<tr>
+<td><img src="https://blog.ahahn94.de/wp-content/uploads/2018/10/comicdb_volume.png"></td>
+</tr>
+</table>
 
 # Additional Information
 
