@@ -1,0 +1,7 @@
+.vertical-center {
+    min-height: 100%;  /* Fallback for browsers without vh support */
+    min-height: 100vh; /* Regular version */
+
+    display: flex;
+    align-items: center;
+}
