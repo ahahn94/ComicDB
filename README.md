@@ -3,19 +3,27 @@
 
 #### ComicDB can not open any comic books. To read your comics, you will need a comic reader on your local device. 
 
-#### ComicDB does not provide any encryption or password protection, so only use it on your own private network.
+#### There are docker-compose files to enable authentication for the apache2 server. Use these at your own risk if you want to use ComicDB outside of your private network and do not forget to use a strong password.
 
 # Getting started
 - Install `docker` and `docker-compose`
 - Copy or link your comic directories to src/comics
 - run `fix_permissions.sh`
-- modify `COMICDB_PATH` and `COMPOSE_FILE` inside `ComicDB.sh` to match your installation directory and architecture
+- modify `COMICDB_PATH` inside `ComicDB.sh` to match your installation directory 
+- modify `COMPOSE_FILE` inside `ComicDB.sh` to
+    - amd64.yaml (AMD64 and no authentication)
+    - amd64_auth.yaml (AMD64 and authentication)
+    - armhf.yaml (ARM and no authentication)
+    - armhy_auth.yaml (ARM and authentification)
+- change `AUTH_PASSWORD` inside your `.yaml` file to a strong password if you are using authentication
+    - (optional) change `AUTH_USERNAME` too
 - get an API key for the Comicvine API from [https://comicvine.gamespot.com/api/](https://comicvine.gamespot.com/api/) and put it into `api-key.ini`
 
 ## Server Control
 - start the server by running `ComicDB.sh` or `ComicDB.sh start`
 - to stop the server just run `ComicDB.sh stop`
 - to stop the server and delete the docker containers, run `ComicDB.sh delete`. This will delete your database!
+- to rebuild the images and start the server, run `ComicDB.sh build`. This will delete your database!
 
 ## Server Autostart
 If you want to automatically start ComicDB when starting your computer, you can e.g. create a cron job that runs ComicDB.sh.

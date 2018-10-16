@@ -1,0 +1,23 @@
+version: '2'
+services:
+  webserver:
+    build: ./docker/php
+    links:
+    - database
+    ports:
+    - "8081:80"
+    volumes:
+    - ./config/apache2/sites-enabled:/etc/apache2/sites-enabled
+    - ./src/:/var/www/html
+    - ./config/php/:/usr/local/etc/php/
+    environment:
+      AUTH_USERNAME: comicdb
+      AUTH_PASSWORD: 1234
+    command: bash -c "htpasswd -Bb -c /etc/apache2/.htpasswd $${AUTH_USERNAME} $${AUTH_PASSWORD}; source /etc/apache2/envvars; apache2 -D FOREGROUND"
+  database:
+    image: mysql:5.5
+    environment:
+      MYSQL_ROOT_PASSWORD: keinsicherespasswort
+      MYSQL_USER: ComicDB
+      MYSQL_PASSWORD: keinsicherespasswort
+      MYSQL_DATABASE: ComicDB
