@@ -15,5 +15,8 @@ if [ $1 = "start" ]; then
     elif [ $1 = "delete" ]; then
     # If option is delete -> stop server and delete containers.
     docker-compose -f $COMICDB_PATH/$COMPOSE_FILE down
+    elif [ $1 = "build" ]; then
+    # If option is build -> rebuild images and start server.
+    docker-compose -f $COMICDB_PATH/$COMPOSE_FILE up --build
 fi
 fi
