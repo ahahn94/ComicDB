@@ -48,7 +48,7 @@ class APIConstants
 
     /**
      * Import the API key from the api-key.ini.
-     * @return null
+     * @return api_key or "null".
      */
     private static function importApiKey()
     {
@@ -61,6 +61,23 @@ class APIConstants
             return $api_key;
         }
         Logging::printDecoratedString("Could not import API key!");
-        return null;
+        return "null";
+    }
+
+    public static function apikeyOK(){
+        $api_key = self::getConstants()["api_key"];
+        if ($api_key == "api_key=null"){
+            // api_key.ini can not be accessed.
+            Logging::printDecoratedString("API key not found! api_key.ini can not be read!");
+            return false;
+        } else if ($api_key == "api_key=foo"){
+            // API key has not been set, default value has been read from api_key.ini.
+            Logging::printDecoratedString('API key not valid. Please replace "foo" in api-key.ini with your actual key.');
+            return false;
+        } else {
+            // api_key.ini successfully parsed, key is not default -> seems valid.
+            Logging::printDecoratedString("API key seems ok.");
+            return true;
+        }
     }
 }

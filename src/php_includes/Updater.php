@@ -9,6 +9,7 @@
 namespace php_includes;
 
 require_once("APIConnector.php");
+require_once("APIConstants.php");
 require_once("Logging.php");
 require_once("ImageCache.php");
 require_once("Database.php");
@@ -30,15 +31,22 @@ class Updater
      */
     public static function updateVolume(string $volume_path)
     {
-        # Prevent collision with other update or delete functions.
-        $fp = fopen("updater.lock", "r+");
-        if (flock($fp, LOCK_EX | LOCK_NB)) {
-            Logging::printDecoratedString("Starting update for " . $volume_path);
-            $volume = self::getDirectoryContent($volume_path);
-            self::updateOnDatabase($volume);
-            fclose($fp);
-            Logging::printDecoratedString("Update done for " . $volume_path);
+        if (APIConstants::apikeyOK()) {
+            // API key ok, proceed with update.
+            # Prevent collision with other update or delete functions.
+            $fp = fopen("updater.lock", "r+");
+            if (flock($fp, LOCK_EX | LOCK_NB)) {
+                Logging::printDecoratedString("Starting update for " . $volume_path);
+                $volume = self::getDirectoryContent($volume_path);
+                Logging::printDecoratedString("Start reading from API...");
+                self::updateOnDatabase($volume);
+                fclose($fp);
+                Logging::printDecoratedString("Update done for " . $volume_path);
+            }
+        } else {
+            Logging::printDecoratedString("API key is not ok. Update aborted.");
         }
+
     }
 
     /**
@@ -46,26 +54,38 @@ class Updater
      */
     public static function updateAll()
     {
-        # Prevent collision with other update or delete functions.
-        $fp = fopen("updater.lock", "r+");
-        if (flock($fp, LOCK_EX | LOCK_NB)) {
+        if (APIConstants::apikeyOK()) {
+            // API key ok, proceed with update.
+            # Prevent collision with other update or delete functions.
+            $fp = fopen("updater.lock", "r+");
+            if (flock($fp, LOCK_EX | LOCK_NB)) {
 
-            Logging::printDecoratedString("Starting update for whole database...");
+                Logging::printDecoratedString("Starting update for whole database...");
 
-            $comics_directories = self::getDirectoryNames();
+                $comics_directories = self::getDirectoryNames();
 
-            $volumes = array();
+                $volumes = array();
 
-            foreach ($comics_directories as $comics_directory) {
-                array_push($volumes, self::getDirectoryContent(self::$COMICS_PATH . $comics_directory));
+                foreach ($comics_directories as $comics_directory) {
+                    $directory_content = self::getDirectoryContent(self::$COMICS_PATH . $comics_directory);
+                    if (!is_null($directory_content)) {
+                        // Only add volumes for directories that contain proper comic files and a volume.ini.
+                        array_push($volumes, $directory_content);
+                    }
+                }
+
+                Logging::printDecoratedString("Start reading from API...");
+
+                foreach ($volumes as $volume) {
+                    self::updateOnDatabase($volume);
+                }
+                fclose($fp);
+                Logging::printDecoratedString("Update finished for whole database");
             }
-
-            foreach ($volumes as $volume) {
-                self::updateOnDatabase($volume);
-            }
-            fclose($fp);
-            Logging::printDecoratedString("Update finished for whole database");
+        } else {
+            Logging::printDecoratedString("API key is not ok. Update aborted.");
         }
+
     }
 
     /**
@@ -169,10 +189,27 @@ class Updater
                 $issue_number = intval(array_pop(explode('#', $file_basename)));
                 $issue["issue_number"] = $issue_number;
                 $issue["local_path"] = $directory_path . "/" . $comic_file;
-                array_push($issues, $issue);
+
+                if ($issue_number != 0) {
+                    // if issue_number can be parsed, add issue to issues.
+                    array_push($issues, $issue);
+                } else {
+                    // issue_number could not be parsed print info to log.
+                    Logging::printDecoratedString("Can not retrieve issue number from " . $directory_path . "/" .
+                        $comic_file . ". Skipping.");
+                }
             }
-            $volume["issues"] = $issues;
-            return $volume;
+            if (empty($issues)) {
+                // If no issues were parsable, return null.
+                return null;
+            } else {
+                $volume["issues"] = $issues;
+                return $volume;
+            }
+        } else {
+            // No volume.ini in directory. Print info to log.
+            Logging::printDecoratedString("No volume.ini found in " . $directory_path . ". Skipping.");
+            return null;
         }
     }
 }

@@ -23,6 +23,6 @@ class Logging
      */
     public static function printDecoratedString(string $message)
     {
-        echo date("d.m.Y H:i:s (e) ", time()) . $message . PHP_EOL;
+        file_put_contents("log.txt", date("d.m.Y H:i:s (e) ", time()) . $message . PHP_EOL, FILE_APPEND);
     }
 }
