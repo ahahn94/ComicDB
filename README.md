@@ -4,6 +4,7 @@
 #### ComicDB can not open any comic books. To read your comics, you will need a comic reader on your local device. 
 
 #### There are docker-compose files to enable authentication for the apache2 server. Use these at your own risk if you want to use ComicDB outside of your private network and do not forget to use a strong password.
+### ComicDB uses HTTP-Basic Authentication, which sends the password in clear text, so use SSL/TLS to secure password transmission.
 
 # Getting started
 - Install `docker` and `docker-compose`
